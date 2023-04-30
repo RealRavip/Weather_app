@@ -1,29 +1,92 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:weather_station/Models/AirqualityApi.dart';
+import 'package:weather_station/Models/WeatherApi.dart';
 // import 'package:weather_station/Models/location_get.dart';
-import 'package:weather_station/Models/globals.dart' as global;
+import 'package:http/http.dart' as http;
+
+late WeatherApi _w;
+late AirqualityApi _a;
+
+Future getWeatherData(double lat, double long) async {
+  final url = Uri.parse("http://192.168.1.48:8080/weather?lat=${lat}&lon=${long}");
+  final _Url = Uri.parse("http://192.168.1.48:8080/air-quality");
+  var _Wresponse = await http.get(url);
+  var _Aresponse = await http.get(_Url);
+  print(_Wresponse.body);
+  print(_Aresponse.body);
+  _w = weatherApiFromJson(_Wresponse.body);
+  _a = AirqualityApiFromJson(_Aresponse.body);
+}
+
+
 class Home extends StatefulWidget {
-  const Home({super.key});
+  final double currentlat;
+  final double currentlong;
+  const Home(this.currentlat, this.currentlong, {super.key});
 
   @override
-  State<Home> createState() => _HomeState();
+  State<Home> createState() => _HomeState(this.currentlat,this.currentlong);
 }
 
 class _HomeState extends State<Home> {
+
+  String? _currentAddress;
+  Position? _currentPosition;
+  final double _currentlat;
+  final double _currentlong;
+  _HomeState(this._currentlat, this._currentlong);
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: ListView(
-      padding: const EdgeInsets.all(8),
-      children: [
-        CurrentWeatherView(),
-        forcastViewsDaily(),
-      ],
-    ));
+  void initState() {
+    super.initState();
+    // _getCurrentPosition();
+    // getWeatherData(this._currentlat, this._currentlong, this._w, this._a);
   }
 
-  Widget CurrentWeatherView() {
+  @override
+  Widget build(BuildContext context) {
+    return 
+    // Scaffold(
+    //     body: ListView(
+    //   padding: const EdgeInsets.all(8),
+    //   children: [
+    //     CurrentWeatherView(_w),
+    //     forcastViewsDaily(),
+    //   ],
+    // ));
+    FutureBuilder(
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          print(_currentlat);
+          return Scaffold(
+              body: ListView(
+            padding: const EdgeInsets.all(8),
+            children: [
+              CurrentWeatherView(_w),
+              forcastViewsDaily(),
+            ],
+          ));
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
+      future: getWeatherData(13.7897448, 100.7883344),
+      //getWeatherData(_currentlat, _currentlong, _w, _a),
+    );
+    // return Scaffold(
+    //     body: ListView(
+    //   padding: const EdgeInsets.all(8),
+    //   children: [
+    //     CurrentWeatherView(),
+    //     forcastViewsDaily(),
+    //   ],
+    // ));
+  }
+
+  Widget CurrentWeatherView(WeatherApi _w) {
     return Column(
-      children: [createAppBar(), weatherBox(), weatherDetailsBox()],
+      children: [createAppBar(_w), weatherBox(_w), weatherDetailsBox(_w)],
     );
   }
 
@@ -31,7 +94,7 @@ class _HomeState extends State<Home> {
     return dailyBoxes();
   }
 
-  Widget createAppBar() {
+  Widget createAppBar(WeatherApi w) {
     // Location dropdownValue = locations.first;
     return Container(
         padding:
@@ -49,10 +112,10 @@ class _HomeState extends State<Home> {
                 offset: Offset(0, 3),
               )
             ]),
-        child: Text(global.currentlat ?? ""));
+        child: Text(_w.city.name?? ""));
   }
 
-  Widget weatherBox() {
+  Widget weatherBox(WeatherApi _w) {
     return Stack(children: [
       Container(
         padding: const EdgeInsets.all(15.0),
@@ -87,7 +150,7 @@ class _HomeState extends State<Home> {
                     Container(
                         margin: const EdgeInsets.all(5.0),
                         child: Text(
-                          "windy",
+                          "${_w.current.weather[0].description}",
                           style: TextStyle(
                               fontWeight: FontWeight.normal,
                               fontSize: 16,
@@ -96,7 +159,7 @@ class _HomeState extends State<Home> {
                     Container(
                         margin: const EdgeInsets.all(5.0),
                         child: Text(
-                          "H:25° L:21°",
+                          "H:${_w.current.main.tempMax}° L:${_w.current.main.tempMin}°",
                           textAlign: TextAlign.left,
                           style: TextStyle(
                               fontWeight: FontWeight.normal,
@@ -107,7 +170,7 @@ class _HomeState extends State<Home> {
               Column(children: <Widget>[
                 Container(
                     child: Text(
-                  "23°",
+                  _w.current.main.temp.toString() ?? "",
                   textAlign: TextAlign.left,
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -117,7 +180,7 @@ class _HomeState extends State<Home> {
                 Container(
                     margin: const EdgeInsets.all(0),
                     child: Text(
-                      "Feels like 25",
+                      "Fell like${_w.current.main.feelsLike}",
                       textAlign: TextAlign.left,
                       style: TextStyle(
                           fontWeight: FontWeight.normal,
@@ -130,7 +193,7 @@ class _HomeState extends State<Home> {
     ]);
   }
 
-  Widget weatherDetailsBox() {
+  Widget weatherDetailsBox(WeatherApi _w) {
     return Container(
       padding: const EdgeInsets.only(left: 15, top: 25, bottom: 25, right: 15),
       margin: const EdgeInsets.only(left: 15, top: 5, bottom: 15, right: 15),
@@ -161,7 +224,7 @@ class _HomeState extends State<Home> {
               )),
               Container(
                   child: Text(
-                "12 km/h",
+                "${_w.current.wind.speed} km/h",
                 textAlign: TextAlign.left,
                 style: TextStyle(
                     fontWeight: FontWeight.w700,
@@ -184,7 +247,7 @@ class _HomeState extends State<Home> {
               )),
               Container(
                   child: Text(
-                "50%",
+                "${_w.current.main.humidity}%",
                 textAlign: TextAlign.left,
                 style: TextStyle(
                     fontWeight: FontWeight.w700,
@@ -198,7 +261,7 @@ class _HomeState extends State<Home> {
             children: [
               Container(
                   child: Text(
-                "Pressure",
+                "Pm2.5",
                 textAlign: TextAlign.left,
                 style: TextStyle(
                     fontWeight: FontWeight.w600,
@@ -207,7 +270,7 @@ class _HomeState extends State<Home> {
               )),
               Container(
                   child: Text(
-                "12 hPa",
+                "${_a.data!.aqi}",
                 textAlign: TextAlign.left,
                 style: TextStyle(
                     fontWeight: FontWeight.w700,
@@ -231,7 +294,7 @@ class _HomeState extends State<Home> {
                   physics: ClampingScrollPhysics(),
                   padding: const EdgeInsets.only(
                       left: 8, top: 0, bottom: 0, right: 8),
-                  itemCount: 5,
+                  itemCount: _w.forecasts.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Container(
                         padding: const EdgeInsets.only(
@@ -240,13 +303,13 @@ class _HomeState extends State<Home> {
                         child: Row(children: [
                           Expanded(
                               child: Text(
-                            "Date",
+                            "${_w.forecasts[index].day}",
                             style: TextStyle(fontSize: 14, color: Colors.black),
                           )),
-                          Expanded(child: Text("Icon")),
+                          Expanded(child: Text("${_w.forecasts[index].hours[0].forecast.weather[0].description}")),
                           Expanded(
                               child: Text(
-                            "$index/$index",
+                            "${_w.forecasts[index].hours[0].forecast.main.tempMax}/${_w.forecasts[index].hours[0].forecast.main.tempMin}",
                             textAlign: TextAlign.right,
                             style: TextStyle(fontSize: 14, color: Colors.grey),
                           )),
@@ -255,5 +318,65 @@ class _HomeState extends State<Home> {
         ],
       ),
     );
+  }
+
+  Future<bool> _handleLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location services are disabled. Please enable the services')));
+      return false;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Location permissions are denied')));
+        return false;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location permissions are permanently denied, we cannot request permissions.')));
+      return false;
+    }
+    return true;
+  }
+
+  Future<void> _getCurrentPosition() async {
+    final hasPermission = await _handleLocationPermission();
+
+    if (!hasPermission) return;
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) {
+      setState(() => _currentPosition = position);
+      _getAddressFromLatLng(_currentPosition!);
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
+
+  Future<void> _getAddressFromLatLng(Position position) async {
+    await placemarkFromCoordinates(
+            _currentPosition!.latitude, _currentPosition!.longitude)
+        .then((List<Placemark> placemarks) {
+      Placemark place = placemarks[0];
+      setState(() {
+        // _currentlat = _currentPosition!.latitude.toString();
+        // _currentlong = _currentPosition!.longitude.toString();
+        print(_currentlat);
+        print(_currentlong);
+        _currentAddress =
+            '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}';
+      });
+    }).catchError((e) {
+      debugPrint(e);
+    });
   }
 }

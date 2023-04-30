@@ -6,6 +6,8 @@ import 'package:weather_station/Pages/Home.dart';
 import 'package:weather_station/Pages/Setting.dart';
 import 'package:weather_station/Models/globals.dart' as global;
 
+import 'package:weather_station/Models/Api.dart';
+
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -18,14 +20,13 @@ class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
   final List<Widget> _page = [
     // LocationPage(),
-    Home(),
+    Home(global.currentlat, global.currentlong),
     UserSetting()
   ];
   String? _currentAddress;
   Position? _currentPosition;
-  String? _currentlat;
-  String? _currentlong;
-
+  double _currentlat = 0;
+  double _currentlong = 0;
   @override
   void initState() {
     super.initState();
@@ -37,10 +38,12 @@ class _MyHomePageState extends State<MyHomePage> {
     return FutureBuilder(
       builder: (context, snapshot) {
         if (_currentPosition != null) {
+          _currentlat = double.parse(_currentPosition!.latitude.toString());
+          _currentlong = double.parse(_currentPosition!.longitude.toString());
           if (global.currentlat == null) {
             return Text("Error getting weather");
           } else {
-            return body_a();
+            return body_a(_currentlat,_currentlong);
           }
         } else {
           return Center(child: CircularProgressIndicator());
@@ -50,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-    Widget body_a(){
+    Widget body_a(double currentlat, double currentlong){
       return Scaffold(
       body: _page[_selectedIndex],
       bottomNavigationBar: Container(
@@ -134,8 +137,8 @@ class _MyHomePageState extends State<MyHomePage> {
         .then((List<Placemark> placemarks) {
       Placemark place = placemarks[0];
       setState(() {
-        global.currentlat = _currentPosition!.latitude.toString();
-        global.currentlong = _currentPosition!.longitude.toString();
+        // global.currentlat = _currentPosition!.latitude.toString();
+        // global.currentlong = _currentPosition!.longitude.toString();
         _currentAddress =
             '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}';
       });

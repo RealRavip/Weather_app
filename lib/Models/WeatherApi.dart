@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-WeatherApi weatherApiFromJson(String str) => WeatherApi.fromJson(json.decode(str));
+WeatherApi weatherApiFromJson(String str) =>
+    WeatherApi.fromJson(json.decode(str));
 
 class WeatherApi {
   WeatherApi({
@@ -12,17 +13,17 @@ class WeatherApi {
   late final List<Forecasts> forecasts;
   late final City city;
 
-  
-  WeatherApi.fromJson(Map<String, dynamic> json){
+  WeatherApi.fromJson(Map<String, dynamic> json) {
     current = Current.fromJson(json['current']);
-    forecasts = List.from(json['forecasts']).map((e)=>Forecasts.fromJson(e)).toList();
+    forecasts =
+        List.from(json['forecasts']).map((e) => Forecasts.fromJson(e)).toList();
     city = City.fromJson(json['city']);
   }
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
     _data['current'] = current.toJson();
-    _data['forecasts'] = forecasts.map((e)=>e.toJson()).toList();
+    _data['forecasts'] = forecasts.map((e) => e.toJson()).toList();
     _data['city'] = city.toJson();
     return _data;
   }
@@ -57,10 +58,11 @@ class Current {
   late final int id;
   late final String name;
   late final int cod;
-  
-  Current.fromJson(Map<String, dynamic> json){
+
+  Current.fromJson(Map<String, dynamic> json) {
     coord = Coord.fromJson(json['coord']);
-    weather = List.from(json['weather']).map((e)=>Weather.fromJson(e)).toList();
+    weather =
+        List.from(json['weather']).map((e) => Weather.fromJson(e)).toList();
     base = json['base'];
     main = Main.fromJson(json['main']);
     visibility = json['visibility'];
@@ -77,7 +79,7 @@ class Current {
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
     _data['coord'] = coord.toJson();
-    _data['weather'] = weather.map((e)=>e.toJson()).toList();
+    _data['weather'] = weather.map((e) => e.toJson()).toList();
     _data['base'] = base;
     _data['main'] = main.toJson();
     _data['visibility'] = visibility;
@@ -100,10 +102,15 @@ class Coord {
   });
   late final double lon;
   late final double lat;
-  
-  Coord.fromJson(Map<String, dynamic> json){
-    lon = json['lon'];
-    lat = json['lat'];
+
+  Coord.fromJson(Map<String, dynamic> json) {
+    if (json['lon'].runtimeType == int || json['lat'].runtimeType == int) {
+      double lon_temp = json['lon'] + .0;
+      double lat_temp = json['lat'] + .0;
+    } else {
+      lon = json['lon'];
+      lat = json['lat'];
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -125,8 +132,8 @@ class Weather {
   late final String main;
   late final String description;
   late final String icon;
-  
-  Weather.fromJson(Map<String, dynamic> json){
+
+  Weather.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     main = json['main'];
     description = json['description'];
@@ -158,12 +165,24 @@ class Main {
   late final double tempMax;
   late final int pressure;
   late final int humidity;
-  
-  Main.fromJson(Map<String, dynamic> json){
-    temp = json['temp'];
+
+  Main.fromJson(Map<String, dynamic> json) {
+    if (json['temp'].runtimeType == int ||
+        json['temp_min'].runtimeType == int ||
+        json['temp_max'].runtimeType == int) {
+      double t = json['temp'] + .0;
+      double tmi = json['temp_min'] + .0;
+      double tma = json['temp_max'] + .0;
+      temp = t;
+      tempMin = tmi;
+      tempMax = tma;
+    } else {
+      temp = json['temp'];
+      tempMin = json['temp_min'];
+      tempMax = json['temp_max'];
+    }
+
     feelsLike = json['feels_like'];
-    tempMin = json['temp_min'];
-    tempMax = json['temp_max'];
     pressure = json['pressure'];
     humidity = json['humidity'];
   }
@@ -187,8 +206,8 @@ class Wind {
   });
   late final double speed;
   late final int deg;
-  
-  Wind.fromJson(Map<String, dynamic> json){
+
+  Wind.fromJson(Map<String, dynamic> json) {
     speed = json['speed'];
     deg = json['deg'];
   }
@@ -206,8 +225,8 @@ class Clouds {
     required this.all,
   });
   late final int all;
-  
-  Clouds.fromJson(Map<String, dynamic> json){
+
+  Clouds.fromJson(Map<String, dynamic> json) {
     all = json['all'];
   }
 
@@ -231,13 +250,23 @@ class Sys {
   late final String country;
   late final int sunrise;
   late final int sunset;
-  
-  Sys.fromJson(Map<String, dynamic> json){
-    type = json['type'];
-    id = json['id'];
-    country = json['country'];
-    sunrise = json['sunrise'];
-    sunset = json['sunset'];
+
+  Sys.fromJson(Map<String, dynamic> json) {
+    // print(json);
+    // type = 2;
+    // id = 2034555;
+    // country = "TH";
+    // sunrise = 1682809022;
+    // sunset = 1682854401;
+
+    if (json['pod'] != Null) {
+    } else {
+      type = json['type'];
+      id = json['id'];
+      country = json['country'];
+      sunrise = json['sunrise'];
+      sunset = json['sunset'];
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -258,16 +287,16 @@ class Forecasts {
   });
   late final String day;
   late final List<Hours> hours;
-  
-  Forecasts.fromJson(Map<String, dynamic> json){
+
+  Forecasts.fromJson(Map<String, dynamic> json) {
     day = json['day'];
-    hours = List.from(json['hours']).map((e)=>Hours.fromJson(e)).toList();
+    hours = List.from(json['hours']).map((e) => Hours.fromJson(e)).toList();
   }
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
     _data['day'] = day;
-    _data['hours'] = hours.map((e)=>e.toJson()).toList();
+    _data['hours'] = hours.map((e) => e.toJson()).toList();
     return _data;
   }
 }
@@ -279,8 +308,8 @@ class Hours {
   });
   late final Forecast forecast;
   late final String hour;
-  
-  Hours.fromJson(Map<String, dynamic> json){
+
+  Hours.fromJson(Map<String, dynamic> json) {
     forecast = Forecast.fromJson(json['forecast']);
     hour = json['hour'];
   }
@@ -311,18 +340,26 @@ class Forecast {
   late final Clouds clouds;
   late final Wind wind;
   late final int visibility;
-  late final int? pop;
+  late final double pop;
   late final Sys sys;
   late final String dtTxt;
-  
-  Forecast.fromJson(Map<String, dynamic> json){
+
+  Forecast.fromJson(Map<String, dynamic> json) {
     dt = json['dt'];
     main = Main.fromJson(json['main']);
-    weather = List.from(json['weather']).map((e)=>Weather.fromJson(e)).toList();
+    weather =
+        List.from(json['weather']).map((e) => Weather.fromJson(e)).toList();
     clouds = Clouds.fromJson(json['clouds']);
     wind = Wind.fromJson(json['wind']);
     visibility = json['visibility'];
-    pop = json['pop'];
+    print(json['pop']);
+    if (json['pop'].runtimeType == int) {
+      double temp = json['pop'] + .0;
+      pop = temp;
+    } else {
+      pop = json['pop'];
+    }
+
     sys = Sys.fromJson(json['sys']);
     dtTxt = json['dt_txt'];
   }
@@ -331,7 +368,7 @@ class Forecast {
     final _data = <String, dynamic>{};
     _data['dt'] = dt;
     _data['main'] = main.toJson();
-    _data['weather'] = weather.map((e)=>e.toJson()).toList();
+    _data['weather'] = weather.map((e) => e.toJson()).toList();
     _data['clouds'] = clouds.toJson();
     _data['wind'] = wind.toJson();
     _data['visibility'] = visibility;
@@ -361,8 +398,8 @@ class City {
   late final int timezone;
   late final int sunrise;
   late final int sunset;
-  
-  City.fromJson(Map<String, dynamic> json){
+
+  City.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     coord = Coord.fromJson(json['coord']);
@@ -384,5 +421,23 @@ class City {
     _data['sunrise'] = sunrise;
     _data['sunset'] = sunset;
     return _data;
+  }
+}
+
+class TypesHelper {
+  static int toInt(num val) {
+    try {
+      if (val == null) {
+        return 0;
+      }
+      if (val is int) {
+        return val;
+      } else {
+        return val.toInt();
+      }
+    } catch (error) {
+      print('Error');
+      return 0;
+    }
   }
 }

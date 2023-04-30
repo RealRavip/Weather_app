@@ -1,2 +1,4 @@
-String currentlat = "";
-String currentlong = "";
+
+
+double currentlat = 0;
+double currentlong = 0;

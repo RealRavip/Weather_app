@@ -1,13 +1,15 @@
 import 'dart:convert';
 
-air_quaity AirqualityFromJson(String str) => air_quaity.fromJson(json.decode(str));
-class air_quaity {
+AirqualityApi AirqualityApiFromJson(String str) =>
+    AirqualityApi.fromJson(json.decode(str));
+
+class AirqualityApi {
   String? status;
   Data? data;
 
-  air_quaity({this.status, this.data});
+  AirqualityApi({this.status, this.data});
 
-  air_quaity.fromJson(Map<String, dynamic> json) {
+  AirqualityApi.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
   }
@@ -226,7 +228,13 @@ class No2 {
   No2({this.v});
 
   No2.fromJson(Map<String, dynamic> json) {
-    v = json['v'];
+    if(json['v'].runtimeType == int){
+      double temp = json['v'] + .0;
+    }
+    else{
+        v = json['v'];
+    }
+
   }
 
   Map<String, dynamic> toJson() {
@@ -281,8 +289,8 @@ class Forecast {
 
 class Daily {
   List<O3>? o3;
-  List<O3>? pm10;
-  List<O3>? pm25;
+  List<Pm10>? pm10;
+  List<Pm25>? pm25;
 
   Daily({this.o3, this.pm10, this.pm25});
 
@@ -294,15 +302,15 @@ class Daily {
       });
     }
     if (json['pm10'] != null) {
-      pm10 = <O3>[];
+      pm10 = <Pm10>[];
       json['pm10'].forEach((v) {
-        pm10!.add(new O3.fromJson(v));
+        pm10!.add(new Pm10.fromJson(v));
       });
     }
     if (json['pm25'] != null) {
-      pm25 = <O3>[];
+      pm25 = <Pm25>[];
       json['pm25'].forEach((v) {
-        pm25!.add(new O3.fromJson(v));
+        pm25!.add(new Pm25.fromJson(v));
       });
     }
   }
@@ -318,6 +326,56 @@ class Daily {
     if (this.pm25 != null) {
       data['pm25'] = this.pm25!.map((v) => v.toJson()).toList();
     }
+    return data;
+  }
+}
+
+class Pm25 {
+  int? avg;
+  String? day;
+  int? max;
+  int? min;
+
+  Pm25({this.avg, this.day, this.max, this.min});
+
+  Pm25.fromJson(Map<String, dynamic> json) {
+    avg = json['avg'];
+    day = json['day'];
+    max = json['max'];
+    min = json['min'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['avg'] = this.avg;
+    data['day'] = this.day;
+    data['max'] = this.max;
+    data['min'] = this.min;
+    return data;
+  }
+}
+
+class Pm10 {
+  int? avg;
+  String? day;
+  int? max;
+  int? min;
+
+  Pm10({this.avg, this.day, this.max, this.min});
+
+  Pm10.fromJson(Map<String, dynamic> json) {
+    avg = json['avg'];
+    day = json['day'];
+    max = json['max'];
+    min = json['min'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['avg'] = this.avg;
+    data['day'] = this.day;
+    data['max'] = this.max;
+    data['min'] = this.min;
     return data;
   }
 }

@@ -72,8 +72,8 @@ class _location_getState extends State<location_get> {
         .then((List<Placemark> placemarks) {
       Placemark place = placemarks[0];
       setState(() {
-        global.currentlat = _currentPosition!.latitude.toString();
-        global.currentlong = _currentPosition!.longitude.toString();
+        // global.currentlat = _currentPosition!.latitude.toString();
+        // global.currentlong = _currentPosition!.longitude.toString();
         _currentAddress =
             '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}';
       });
@@ -100,6 +100,6 @@ class _location_getState extends State<location_get> {
                 offset: Offset(0, 3),
               )
             ]),
-        child: Text(global.currentlat ?? ""));
+        child: Text(""));
   }
 }
