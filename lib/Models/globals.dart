@@ -1,0 +1,2 @@
+String currentlat = "";
+String currentlong = "";
