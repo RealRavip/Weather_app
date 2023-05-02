@@ -169,20 +169,23 @@ class Main {
   Main.fromJson(Map<String, dynamic> json) {
     if (json['temp'].runtimeType == int ||
         json['temp_min'].runtimeType == int ||
-        json['temp_max'].runtimeType == int) {
+        json['temp_max'].runtimeType == int ||
+        json['feels_like'] == int) {
       double t = json['temp'] + .0;
       double tmi = json['temp_min'] + .0;
       double tma = json['temp_max'] + .0;
+      double fl = json['feels_like'] + .0;
       temp = t;
       tempMin = tmi;
       tempMax = tma;
+      feelsLike = fl;
     } else {
       temp = json['temp'];
       tempMin = json['temp_min'];
       tempMax = json['temp_max'];
+      feelsLike = json['feels_like'];
     }
 
-    feelsLike = json['feels_like'];
     pressure = json['pressure'];
     humidity = json['humidity'];
   }
@@ -208,7 +211,13 @@ class Wind {
   late final int deg;
 
   Wind.fromJson(Map<String, dynamic> json) {
-    speed = json['speed'];
+    if (json['speed'].runtimeType == int) {
+      double temp = json['speed'] + .0;
+      speed = temp;
+    } else {
+      speed = json['speed'];
+    }
+
     deg = json['deg'];
   }
 

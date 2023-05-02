@@ -1,0 +1,118 @@
+{
+  "project_info": {
+    "project_number": "355526621008",
+    "project_id": "weatherapp-c78ab",
+    "storage_bucket": "weatherapp-c78ab.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:355526621008:android:916d7a5b85110529fede55",
+        "android_client_info": {
+          "package_name": "com.company.weatherapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "355526621008-qdmpkade8gt1fs1fvnpbcj21nar6af5f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1iNcZQtoBjCVcltHxjeI3Mu_mTarq-dc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "355526621008-qdmpkade8gt1fs1fvnpbcj21nar6af5f.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "355526621008-1i2v6f5o1dlkvs1otlbhv52cq9006k07.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.weatherStation"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:355526621008:android:a2797c971771fd95fede55",
+        "android_client_info": {
+          "package_name": "com.example.weather_station"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "355526621008-qdmpkade8gt1fs1fvnpbcj21nar6af5f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1iNcZQtoBjCVcltHxjeI3Mu_mTarq-dc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "355526621008-qdmpkade8gt1fs1fvnpbcj21nar6af5f.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "355526621008-1i2v6f5o1dlkvs1otlbhv52cq9006k07.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.weatherStation"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:355526621008:android:84c65040123548b6fede55",
+        "android_client_info": {
+          "package_name": "com.weather_station"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "355526621008-qdmpkade8gt1fs1fvnpbcj21nar6af5f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1iNcZQtoBjCVcltHxjeI3Mu_mTarq-dc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "355526621008-qdmpkade8gt1fs1fvnpbcj21nar6af5f.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "355526621008-1i2v6f5o1dlkvs1otlbhv52cq9006k07.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.weatherStation"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

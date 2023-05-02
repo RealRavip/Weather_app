@@ -3,14 +3,14 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:weather_station/Models/AirqualityApi.dart';
 import 'package:weather_station/Models/WeatherApi.dart';
-// import 'package:weather_station/Models/location_get.dart';
 import 'package:http/http.dart' as http;
 
 late WeatherApi _w;
 late AirqualityApi _a;
 
 Future getWeatherData(double lat, double long) async {
-  final url = Uri.parse("http://192.168.1.48:8080/weather?lat=${lat}&lon=${long}");
+  final url =
+      Uri.parse("http://192.168.1.48:8080/weather?lat=${lat}&lon=${long}");
   final _Url = Uri.parse("http://192.168.1.48:8080/air-quality");
   var _Wresponse = await http.get(url);
   var _Aresponse = await http.get(_Url);
@@ -20,18 +20,16 @@ Future getWeatherData(double lat, double long) async {
   _a = AirqualityApiFromJson(_Aresponse.body);
 }
 
-
 class Home extends StatefulWidget {
   final double currentlat;
   final double currentlong;
   const Home(this.currentlat, this.currentlong, {super.key});
 
   @override
-  State<Home> createState() => _HomeState(this.currentlat,this.currentlong);
+  State<Home> createState() => _HomeState(this.currentlat, this.currentlong);
 }
 
 class _HomeState extends State<Home> {
-
   String? _currentAddress;
   Position? _currentPosition;
   final double _currentlat;
@@ -40,22 +38,11 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    // _getCurrentPosition();
-    // getWeatherData(this._currentlat, this._currentlong, this._w, this._a);
   }
 
   @override
   Widget build(BuildContext context) {
-    return 
-    // Scaffold(
-    //     body: ListView(
-    //   padding: const EdgeInsets.all(8),
-    //   children: [
-    //     CurrentWeatherView(_w),
-    //     forcastViewsDaily(),
-    //   ],
-    // ));
-    FutureBuilder(
+    return FutureBuilder(
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           print(_currentlat);
@@ -72,16 +59,7 @@ class _HomeState extends State<Home> {
         }
       },
       future: getWeatherData(13.7897448, 100.7883344),
-      //getWeatherData(_currentlat, _currentlong, _w, _a),
     );
-    // return Scaffold(
-    //     body: ListView(
-    //   padding: const EdgeInsets.all(8),
-    //   children: [
-    //     CurrentWeatherView(),
-    //     forcastViewsDaily(),
-    //   ],
-    // ));
   }
 
   Widget CurrentWeatherView(WeatherApi _w) {
@@ -112,7 +90,7 @@ class _HomeState extends State<Home> {
                 offset: Offset(0, 3),
               )
             ]),
-        child: Text(_w.city.name?? ""));
+        child: Text(_w.city.name ?? ""));
   }
 
   Widget weatherBox(WeatherApi _w) {
@@ -170,7 +148,7 @@ class _HomeState extends State<Home> {
               Column(children: <Widget>[
                 Container(
                     child: Text(
-                  _w.current.main.temp.toString() ?? "",
+                  "${_w.current.main.temp.toString()}°" ?? "",
                   textAlign: TextAlign.left,
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -306,7 +284,9 @@ class _HomeState extends State<Home> {
                             "${_w.forecasts[index].day}",
                             style: TextStyle(fontSize: 14, color: Colors.black),
                           )),
-                          Expanded(child: Text("${_w.forecasts[index].hours[0].forecast.weather[0].description}")),
+                          Expanded(
+                              child: Text(
+                                  "${_w.forecasts[index].hours[0].forecast.weather[0].description}")),
                           Expanded(
                               child: Text(
                             "${_w.forecasts[index].hours[0].forecast.main.tempMax}/${_w.forecasts[index].hours[0].forecast.main.tempMin}",
@@ -318,65 +298,5 @@ class _HomeState extends State<Home> {
         ],
       ),
     );
-  }
-
-  Future<bool> _handleLocationPermission() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text(
-              'Location services are disabled. Please enable the services')));
-      return false;
-    }
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Location permissions are denied')));
-        return false;
-      }
-    }
-    if (permission == LocationPermission.deniedForever) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text(
-              'Location permissions are permanently denied, we cannot request permissions.')));
-      return false;
-    }
-    return true;
-  }
-
-  Future<void> _getCurrentPosition() async {
-    final hasPermission = await _handleLocationPermission();
-
-    if (!hasPermission) return;
-    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-        .then((Position position) {
-      setState(() => _currentPosition = position);
-      _getAddressFromLatLng(_currentPosition!);
-    }).catchError((e) {
-      debugPrint(e);
-    });
-  }
-
-  Future<void> _getAddressFromLatLng(Position position) async {
-    await placemarkFromCoordinates(
-            _currentPosition!.latitude, _currentPosition!.longitude)
-        .then((List<Placemark> placemarks) {
-      Placemark place = placemarks[0];
-      setState(() {
-        // _currentlat = _currentPosition!.latitude.toString();
-        // _currentlong = _currentPosition!.longitude.toString();
-        print(_currentlat);
-        print(_currentlong);
-        _currentAddress =
-            '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}';
-      });
-    }).catchError((e) {
-      debugPrint(e);
-    });
   }
 }

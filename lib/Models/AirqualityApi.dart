@@ -212,7 +212,12 @@ class H {
   H({this.v});
 
   H.fromJson(Map<String, dynamic> json) {
-    v = json['v'];
+    if (json['v'].runtimeType == double) {
+      int temp = json['v'].round();
+      v = temp;
+    } else {
+      v = json['v'];
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -228,13 +233,11 @@ class No2 {
   No2({this.v});
 
   No2.fromJson(Map<String, dynamic> json) {
-    if(json['v'].runtimeType == int){
+    if (json['v'].runtimeType == int) {
       double temp = json['v'] + .0;
+    } else {
+      v = json['v'];
     }
-    else{
-        v = json['v'];
-    }
-
   }
 
   Map<String, dynamic> toJson() {

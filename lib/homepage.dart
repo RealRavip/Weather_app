@@ -6,7 +6,7 @@ import 'package:weather_station/Pages/Home.dart';
 import 'package:weather_station/Pages/Setting.dart';
 import 'package:weather_station/Models/globals.dart' as global;
 
-import 'package:weather_station/Models/Api.dart';
+
 
 
 class MyHomePage extends StatefulWidget {
