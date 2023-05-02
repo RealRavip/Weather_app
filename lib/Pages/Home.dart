@@ -1,9 +1,14 @@
+import 'dart:io';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:weather_station/Models/AirqualityApi.dart';
 import 'package:weather_station/Models/WeatherApi.dart';
 import 'package:http/http.dart' as http;
+import 'package:weather_station/Models/send_api.dart';
+import 'package:weather_station/Models/globals.dart' as global;
 
 late WeatherApi _w;
 late AirqualityApi _a;
@@ -45,6 +50,7 @@ class _HomeState extends State<Home> {
     return FutureBuilder(
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
+          sendFcmToken(global.DeviceId, global.FCMToken,13.7897448,100.7883344);
           print(_currentlat);
           return Scaffold(
               body: ListView(
@@ -299,4 +305,6 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+
+
 }

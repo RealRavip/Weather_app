@@ -65,6 +65,22 @@ updateAirReminder(
     print(response.body);
   }
 }
+
+sendFcmToken(String? Id, String fcm, double lat, double long) async {
+  Map<String, String> requestHeaders = {
+    'X-Device-ID': '${Id}',
+    'X-Lat' : '${lat}',
+    'X-Lon' : '${long}'
+  };
+  final url = Uri.parse("http://192.168.1.48:8080/users/fcm-token");
+  Map<String, dynamic> args = {
+      "fcmToken": fcm,
+    };
+    var body = json.encode(args);
+    var response = await http.put(url, body: body, headers: requestHeaders);
+    print(response.statusCode);
+    print(response.body);
+}
 //   if(res.statusCode == 404){
 //     List<int> purpose = [];
 //   for (var i in global.record) {
