@@ -7,7 +7,7 @@ import 'package:weather_station/Models/ReminderApi.dart';
 import 'package:weather_station/Models/send_api.dart';
 import 'package:http/http.dart' as http;
 
-late List<ReminderApi> _r;
+List<ReminderApi> _r = [];
 bool Exist = false;
 List<String> Airoption = ['PERIODIC', 'TIME_OF_DAY'];
 String? selectAirOption = 'PERIODIC';
@@ -15,12 +15,10 @@ List<String> Weatheroption = ['PERIODIC', 'TIME_OF_DAY'];
 String? selectWeatherOption = 'PERIODIC';
 TimeOfDay time = TimeOfDay.now();
 TimeOfDay air_time = TimeOfDay.now();
-String weather_hour =
-    _r[0].timeOfDay.toString().substring(0, 2).padLeft(2, '0');
-String weather_minute =
-    _r[0].timeOfDay.toString().substring(3, 5).padLeft(2, '0');
-String air_hour = _r[1].timeOfDay.toString().substring(0, 2).padLeft(2, '0');
-String air_minute = _r[1].timeOfDay.toString().substring(3, 5).padLeft(2, '0');
+String weather_hour = '';
+String weather_minute = '';
+String air_hour = '';
+String air_minute = '';
 // selectWeatherOption = _r[0].option.toString();
 // selectAirOption = _r[1].option.toString();
 String? Id;
@@ -47,7 +45,7 @@ Future getReminderData() async {
   final url = Uri.parse("http://192.168.1.48:8080/users/reminders");
   var _Wresponse = await http.get(url, headers: requestHeaders);
   print(_Wresponse.body);
-  if (_Wresponse.body == null) {
+  if (_Wresponse.body == 'null') {
   } else {
     Exist = true;
     Iterable body = json.decode(_Wresponse.body);
@@ -74,6 +72,30 @@ class _UserSettingState extends State<UserSetting> {
     return FutureBuilder(
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
+          if (_r.isEmpty) {
+          } else {
+            String weather_hour =
+                _r[0].timeOfDay.toString().substring(0, 2).padLeft(2, '0');
+            String weather_minute =
+                _r[0].timeOfDay.toString().substring(3, 5).padLeft(2, '0');
+            String air_hour =
+                _r[1].timeOfDay.toString().substring(0, 2).padLeft(2, '0');
+            String air_minute =
+                _r[1].timeOfDay.toString().substring(3, 5).padLeft(2, '0');
+            Weather_Controller = TextEditingController(
+                text: _r[0].periodicDuration.toString().substring(0, 2));
+            Air_Controller = TextEditingController(
+                text: _r[1].periodicDuration.toString().substring(0, 2));
+            if (Weather_Controller.text.contains('h')) {
+              Weather_Controller = TextEditingController(
+                  text: _r[0].periodicDuration.toString().substring(0, 1));
+            }
+            if (Air_Controller.text.contains('h')) {
+              Air_Controller = TextEditingController(
+                  text: _r[1].periodicDuration.toString().substring(0, 1));
+            }
+          }
+
           return ReminderBox();
         } else {
           return Center(child: CircularProgressIndicator());
@@ -85,18 +107,6 @@ class _UserSettingState extends State<UserSetting> {
   }
 
   Widget ReminderBox() {
-    Weather_Controller = TextEditingController(
-        text: _r[0].periodicDuration.toString().substring(0, 2));
-    Air_Controller = TextEditingController(
-        text: _r[1].periodicDuration.toString().substring(0, 2));
-    if (Weather_Controller.text.contains('h')) {
-      Weather_Controller = TextEditingController(
-          text: _r[0].periodicDuration.toString().substring(0, 1));
-    }
-    if (Air_Controller.text.contains('h')) {
-      Air_Controller = TextEditingController(
-          text: _r[1].periodicDuration.toString().substring(0, 1));
-    }
     return Scaffold(
       body: Container(
         padding:
@@ -332,18 +342,34 @@ class _UserSettingState extends State<UserSetting> {
     return FloatingActionButton(
         child: Text("Save"),
         onPressed: () {
-          if (selectWeatherOption == 'TIME_OF_DAY') {
-            updateWeatherReminder(_r[0], Id, selectWeatherOption,
-                "${weather_hour}:${weather_minute}");
-          }
-          if (selectAirOption == 'TIME_OF_DAY') {
-            updateAirReminder(
-                _r[1], Id, selectAirOption, "${air_hour}:${air_minute}");
+          if (Exist == false) {
+            if (selectWeatherOption == 'TIME_OF_DAY') {
+              createWeatherReminder(
+                  Id, selectWeatherOption, "${weather_hour}:${weather_minute}");
+            }
+            if (selectAirOption == 'TIME_OF_DAY') {
+              createAirReminder(
+                  Id, selectAirOption, "${air_hour}:${air_minute}");
+            } else {
+              createWeatherReminder(
+                  Id, selectWeatherOption, Weather_Controller.text.toString());
+              createAirReminder(
+                  Id, selectAirOption, Air_Controller.text.toString());
+            }
           } else {
-            updateWeatherReminder(_r[0], Id, selectWeatherOption,
-                Weather_Controller.text.toString());
-            updateAirReminder(
-                _r[1], Id, selectAirOption, Air_Controller.text.toString());
+            if (selectWeatherOption == 'TIME_OF_DAY') {
+              updateWeatherReminder(_r[0], Id, selectWeatherOption,
+                  "${weather_hour}:${weather_minute}");
+            }
+            if (selectAirOption == 'TIME_OF_DAY') {
+              updateAirReminder(
+                  _r[1], Id, selectAirOption, "${air_hour}:${air_minute}");
+            } else {
+              updateWeatherReminder(_r[0], Id, selectWeatherOption,
+                  Weather_Controller.text.toString());
+              updateAirReminder(
+                  _r[1], Id, selectAirOption, Air_Controller.text.toString());
+            }
           }
         });
   }

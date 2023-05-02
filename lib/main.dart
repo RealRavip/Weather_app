@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:weather_station/firebase_options.dart';
 import 'homepage.dart';
 import 'package:weather_station/Models/globals.dart' as global;
+import 'package:dcdg/dcdg.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();

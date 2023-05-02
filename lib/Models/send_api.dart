@@ -81,6 +81,64 @@ sendFcmToken(String? Id, String fcm, double lat, double long) async {
     print(response.statusCode);
     print(response.body);
 }
+
+createWeatherReminder(String? Id, String? option, String i) async {
+  Map<String, String> requestHeaders = {
+    'X-Device-ID': '${Id}',
+  };
+  final url = Uri.parse("http://192.168.1.48:8080/users/reminders");
+  if (option == 'TIME_OF_DAY') {
+    Map<String, dynamic> args = {
+    "type": "WEATHER",
+    "option": option,
+    "periodicDuration": i
+    };
+    var body = json.encode(args);
+    var response = await http.post(url, body: body, headers: requestHeaders);
+    print(response.statusCode);
+    print(response.body);
+  }
+  if (option == 'PERIODIC') {
+    Map<String, dynamic> args = {
+    "type": "WEATHER",
+    "option": option,
+    "periodicDuration": '${i}h' 
+    };
+    var body = json.encode(args);
+    var response = await http.post(url, body: body, headers: requestHeaders);
+    print(response.statusCode);
+    print(response.body);
+  }
+}
+
+createAirReminder(String? Id, String? option, String i) async {
+  Map<String, String> requestHeaders = {
+    'X-Device-ID': '${Id}',
+  };
+  final url = Uri.parse("http://192.168.1.48:8080/users/reminders");
+  if (option == 'TIME_OF_DAY') {
+    Map<String, dynamic> args = {
+    "type": "AIR_QUALITY",
+    "option": option,
+    "periodicDuration": i
+    };
+    var body = json.encode(args);
+    var response = await http.post(url, body: body, headers: requestHeaders);
+    print(response.statusCode);
+    print(response.body);
+  }
+  if (option == 'PERIODIC') {
+    Map<String, dynamic> args = {
+    "type": "AIR_QUALITY",
+    "option": option,
+    "periodicDuration": '${i}h' 
+    };
+    var body = json.encode(args);
+    var response = await http.post(url, body: body, headers: requestHeaders);
+    print(response.statusCode);
+    print(response.body);
+  }
+}
 //   if(res.statusCode == 404){
 //     List<int> purpose = [];
 //   for (var i in global.record) {
