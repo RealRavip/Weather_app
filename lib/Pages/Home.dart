@@ -164,7 +164,7 @@ class _HomeState extends State<Home> {
                 Container(
                     margin: const EdgeInsets.all(0),
                     child: Text(
-                      "Fell like${_w.current.main.feelsLike}",
+                      "Fell like ${_w.current.main.feelsLike}°",
                       textAlign: TextAlign.left,
                       style: TextStyle(
                           fontWeight: FontWeight.normal,

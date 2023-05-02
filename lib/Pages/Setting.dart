@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:weather_station/Models/ReminderApi.dart';
 import 'package:weather_station/Models/send_api.dart';
 import 'package:http/http.dart' as http;
+import 'package:quickalert/quickalert.dart';
 
 List<ReminderApi> _r = [];
 bool Exist = false;
@@ -342,6 +343,18 @@ class _UserSettingState extends State<UserSetting> {
     return FloatingActionButton(
         child: Text("Save"),
         onPressed: () {
+          QuickAlert.show(
+            context: context,
+            type: QuickAlertType.success,
+            text: 'Save Successfully!',
+            autoCloseDuration: const Duration(seconds: 5),
+          );
+          // showDialog(context: context, builder: (context) => AlertDialog(
+          //   title: Text('Saved'),
+          //   actions: [
+          //     TextButton(onPressed: () => Navigator.pop(context), child: Text('Ok'))
+          //   ],
+          // ));
           if (Exist == false) {
             if (selectWeatherOption == 'TIME_OF_DAY') {
               createWeatherReminder(

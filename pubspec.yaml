@@ -43,6 +43,7 @@ dependencies:
   firebase_messaging: ^14.4.1
   device_info_plus: ^8.2.2
   dcdg: ^4.1.0
+  quickalert: ^1.0.1
 
 dev_dependencies:
   flutter_test:
