@@ -160,7 +160,7 @@ class _UserSettingState extends State<UserSetting> {
   Widget AirSetting() {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(width: 2),
+        border: Border.all(width: 1),
         borderRadius: BorderRadius.all(
             Radius.circular(10) //                 <--- border radius here
             ),
@@ -251,7 +251,7 @@ class _UserSettingState extends State<UserSetting> {
   Widget WeatherSetting() {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(width: 2),
+        border: Border.all(width: 1),
         borderRadius: BorderRadius.all(
             Radius.circular(10) //                 <--- border radius here
             ),
