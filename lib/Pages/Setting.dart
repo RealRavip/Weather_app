@@ -356,6 +356,7 @@ class _UserSettingState extends State<UserSetting> {
               createAirReminder(
                   Id, selectAirOption, Air_Controller.text.toString());
             }
+            Exist = true;
           } else {
             if (selectWeatherOption == 'TIME_OF_DAY') {
               updateWeatherReminder(_r[0], Id, selectWeatherOption,
