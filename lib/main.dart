@@ -9,10 +9,6 @@ import 'homepage.dart';
 import 'package:weather_station/Models/globals.dart' as global;
 import 'package:dcdg/dcdg.dart';
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
-  print("Handling a background message: ${message.messageId}");
-}
 
 // this is a test i wadjlksdk
 
