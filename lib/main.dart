@@ -4,7 +4,6 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:weather_station/firebase_options.dart';
 import 'homepage.dart';
 import 'package:weather_station/Models/globals.dart' as global;
 import 'package:dcdg/dcdg.dart';
