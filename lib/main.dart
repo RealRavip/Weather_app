@@ -8,17 +8,13 @@ import 'homepage.dart';
 import 'package:weather_station/Models/globals.dart' as global;
 import 'package:dcdg/dcdg.dart';
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
-  print("Handling a background message: ${message.messageId}");
-}
 
 // this is a test i wadjlksdk
 
 Future <void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   final fcmToken = await FirebaseMessaging.instance.getToken();
   global.FCMToken = fcmToken!;
   print(global.FCMToken);
